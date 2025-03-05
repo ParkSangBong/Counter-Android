@@ -22,19 +22,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.countermvvm.ui.theme.CounterMVVMTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModel: CounterViewModel = viewModel()
             CounterMVVMTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TheCounterApp()
+                    TheCounterApp(viewModel)
                 }
             }
         }
@@ -42,17 +44,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TheCounterApp() {
+fun TheCounterApp(viewModel: CounterViewModel) {
     val count = remember {
         mutableStateOf(0)
-    }
-
-    fun increment() {
-        count.value++
-    }
-
-    fun decrement() {
-        count.value--
     }
 
     Column (
@@ -60,13 +54,13 @@ fun TheCounterApp() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Count : ${count.value}", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Count : ${viewModel.count.value}", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
         Row {
-            Button(onClick = { increment() }) {
+            Button(onClick = { viewModel.increment() }) {
                 Text(text = "Increment")
             }
-            Button(onClick = { decrement() }) {
+            Button(onClick = { viewModel.decrement() }) {
                 Text(text = "Decrement")
             }
         }
